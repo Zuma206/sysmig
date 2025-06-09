@@ -40,7 +40,7 @@ func toResolution(state *lua.State) *Resolution {
 	state.Field(-1, RESOLUTION_SYNC)
 	sync, ok := state.ToString(-1)
 	if !ok {
-		err := errors.New("resolution talbe must include a string sync field")
+		err := errors.New("resolution table must include a string sync field")
 		utils.HandleErr(err)
 	}
 
