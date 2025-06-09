@@ -1,6 +1,7 @@
 package resolve
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/Shopify/go-lua"
@@ -34,6 +35,7 @@ func toResolution(state *lua.State) *Resolution {
 		err := errors.New("resolution table must include a string migration field")
 		utils.HandleErr(err)
 	}
+
 	state.Pop(1)
 	state.Field(-1, RESOLUTION_SYNC)
 	sync, ok := state.ToString(-1)
@@ -41,8 +43,18 @@ func toResolution(state *lua.State) *Resolution {
 		err := errors.New("resolution talbe must include a string sync field")
 		utils.HandleErr(err)
 	}
+
+	state.Pop(1)
+	state.Field(-1, RESOLUTION_STATE)
+	newState := serialize(state)
+	newStateJson, err := json.Marshal(newState)
+	if err != nil {
+		utils.HandleErr(err)
+	}
+
 	return &Resolution{
 		MigrationScript: migration,
 		SyncScript:      sync,
+		NewStateJson:    string(newStateJson),
 	}
 }

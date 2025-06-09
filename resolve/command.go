@@ -17,6 +17,7 @@ var Command = cobra.Command{
 		resolution := resolve(flags.configPath)
 		println(resolution.MigrationScript)
 		println(resolution.SyncScript)
+		println(resolution.NewStateJson)
 	},
 }
 
