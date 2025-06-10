@@ -15,6 +15,7 @@ func init() {
 	command.AddCommand(&resolve.Command)
 	command.AddCommand(&misc.Version)
 	command.AddCommand(&misc.Clean)
+	command.AddCommand(&misc.Init)
 }
 
 func main() {
