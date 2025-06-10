@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/zuma206/sysmig/misc"
 	"github.com/zuma206/sysmig/resolve"
 	"github.com/zuma206/sysmig/utils"
 )
@@ -13,6 +14,7 @@ var command = cobra.Command{
 
 func init() {
 	command.AddCommand(&resolve.Command)
+	command.AddCommand(&misc.Version)
 }
 
 func main() {
