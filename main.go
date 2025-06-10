@@ -14,6 +14,7 @@ var command = cobra.Command{
 func init() {
 	command.AddCommand(&resolve.Command)
 	command.AddCommand(&misc.Version)
+	command.AddCommand(&misc.Clean)
 }
 
 func main() {
