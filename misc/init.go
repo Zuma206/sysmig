@@ -17,6 +17,7 @@ var Init = cobra.Command{
 	},
 }
 
+// Creates the state file if it doesn't exist, may panic
 func runInit() {
 	path := resolve.GetStatePath()
 	_, err := os.Stat(path)
@@ -27,6 +28,7 @@ func runInit() {
 	}
 }
 
+// Writes a JSON nil value to the given path, may panic
 func createStateFile(path string) {
 	utils.HandleErr(os.WriteFile(path, []byte("null\n"), utils.READWRITE_PERMS))
 	fmt.Printf("Created an initial state file at %s\n", path)
