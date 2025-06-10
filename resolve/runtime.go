@@ -8,12 +8,16 @@ import (
 	"github.com/zuma206/sysmig/utils"
 )
 
+// Represents the 'resolution' of a system script:
+// migration script + sync script + next state
 type Resolution struct {
 	migrationScript string
 	syncScript      string
-	newStateJson    string
+	nextStateJson   string
 }
 
+// Takes json for the previous state, and passes it through a LUA VM
+// to resolve it to a resolution struct
 func resolve(oldStateJson string) *Resolution {
 	state := lua.NewState()
 	utils.HandleErr(lua.DoFile(state, flags.configPath))
@@ -22,12 +26,15 @@ func resolve(oldStateJson string) *Resolution {
 	return toResolution(state)
 }
 
+// Keys for the 'resolution' table returned by a system script
 const (
 	RESOLUTION_MIGRATION = "migration"
 	RESOLUTION_SYNC      = "sync"
 	RESOLUTION_STATE     = "next_state"
 )
 
+// Takes a resolution table on the lua stack and converts it into a resolution struct
+// May panic!
 func toResolution(state *lua.State) *Resolution {
 	state.Field(-1, RESOLUTION_MIGRATION)
 	migration, ok := state.ToString(-1)
@@ -60,6 +67,6 @@ func toResolution(state *lua.State) *Resolution {
 	return &Resolution{
 		migrationScript: migration,
 		syncScript:      sync,
-		newStateJson:    string(newStateJson),
+		nextStateJson:   string(newStateJson),
 	}
 }

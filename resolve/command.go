@@ -13,6 +13,8 @@ type Flags struct {
 	syncPath      string
 }
 
+// Global instance of the flags needed to resolve
+// Kinda cursed but it's how cobra works for some reason?
 var flags = new(Flags)
 
 var Command = cobra.Command{
@@ -46,8 +48,9 @@ func init() {
 	)
 }
 
+// $HOME/.sysmig
+// or /etc/.sysmig
 func getDir() string {
-
 	dir := os.Getenv("HOME")
 	if dir == "" {
 		dir = "/etc"

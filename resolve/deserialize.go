@@ -7,6 +7,8 @@ import (
 	"github.com/zuma206/sysmig/utils"
 )
 
+// Take json data and put it onto the lua stack
+// May panic!
 func deserialize(jsonData string, state *lua.State) {
 	var result any
 	if err := json.Unmarshal([]byte(jsonData), &result); err != nil {
@@ -15,6 +17,7 @@ func deserialize(jsonData string, state *lua.State) {
 	hydrate(result, state)
 }
 
+// Take an unmarshalled JSON value and put it onto the lua stack
 func hydrate(value any, state *lua.State) {
 	switch typedValue := value.(type) {
 	case string:
@@ -32,6 +35,7 @@ func hydrate(value any, state *lua.State) {
 	}
 }
 
+// Iterative over a hashmap and create a lua table
 func hydrateMap(hashmap map[string]any, state *lua.State) {
 	state.CreateTable(0, len(hashmap))
 	for key, value := range hashmap {
@@ -40,6 +44,7 @@ func hydrateMap(hashmap map[string]any, state *lua.State) {
 	}
 }
 
+// Iterate over an array and hydrate it into a lua table
 func hydrateArray(array []any, state *lua.State) {
 	state.CreateTable(len(array), 0)
 	for i, value := range array {
