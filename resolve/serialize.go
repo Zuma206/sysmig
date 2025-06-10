@@ -2,6 +2,7 @@ package resolve
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/Shopify/go-lua"
 	"github.com/zuma206/sysmig/utils"
@@ -16,60 +17,38 @@ func serialize(state *lua.State) any {
 	}
 }
 
-func isArray(state *lua.State) bool {
-	state.PushNil()
-	if !state.Next(-2) {
-		return true
-	}
-	isArray := state.IsNumber(-2)
-	state.Pop(2)
-	return isArray
-}
-
 func serializeTable(state *lua.State) any {
-	if isArray(state) {
-		return serializeArrayTable(state)
-	} else {
-		return serializeHashTable(state)
-	}
-}
-
-func serializeArrayTable(state *lua.State) []any {
-	length := getLength(state)
-	array := make([]any, length)
-	for i := range length {
-		state.RawGetInt(-1, i+1)
-		value := serialize(state)
-		array[i] = value
-		state.Pop(1)
-	}
-	return array
-}
-
-func getLength(state *lua.State) int {
-	state.Length(-1)
-	length, ok := state.ToInteger(-1)
-	if !ok {
-		err := errors.New("cannot get length of non-table")
-		utils.HandleErr(err)
-	}
-	state.Pop(1)
-	return length
-}
-
-func serializeHashTable(state *lua.State) map[string]any {
-	table := make(map[string]any)
+	array := []any{}
 	state.PushNil()
 	for state.Next(-2) {
 		value := serialize(state)
 		state.Pop(1)
-		key, ok := state.ToString(-1)
-		if !ok {
-			err := errors.New("cannot serialize state tables with non-string keys")
-			utils.HandleErr(err)
+		if !state.IsNumber(-1) {
+			return serializeAsHashtable(state, array, value)
 		}
-		table[key] = value
+		array = append(array, value)
 	}
-	state.Pop(1)
-	return table
+	return array
+}
+
+func serializeAsHashtable(state *lua.State, array []any, value any) map[string]any {
+	hashmap := map[string]any{getKey(state): value}
+	for i, value := range array {
+		hashmap[strconv.Itoa(i)] = value
+	}
+	for state.Next(-2) {
+		value := serialize(state)
+		state.Pop(1)
+		hashmap[getKey(state)] = value
+	}
+	return hashmap
+}
+
+func getKey(state *lua.State) string {
+	key, ok := state.ToString(-1)
+	if !ok {
+		err := errors.New("mixed-key table keys must be able to be serialized as strings")
+		utils.HandleErr(err)
+	}
+	return key
 }
