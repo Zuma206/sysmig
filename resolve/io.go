@@ -23,3 +23,9 @@ func writeResolution(resolution *Resolution) {
 		utils.EXECUTABLE_PERMS,
 	))
 }
+
+func readState() string {
+	data, err := os.ReadFile(flags.statePath)
+	utils.HandleErr(err)
+	return string(data)
+}

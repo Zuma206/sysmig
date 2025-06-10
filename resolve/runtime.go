@@ -14,10 +14,10 @@ type Resolution struct {
 	newStateJson    string
 }
 
-func resolve() *Resolution {
+func resolve(oldStateJson string) *Resolution {
 	state := lua.NewState()
 	utils.HandleErr(lua.DoFile(state, flags.configPath))
-	state.PushString("old_state_value")
+	deserialize(oldStateJson, state)
 	state.Call(1, 1)
 	return toResolution(state)
 }
