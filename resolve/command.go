@@ -18,6 +18,7 @@ var Command = cobra.Command{
 		println(resolution.MigrationScript)
 		println(resolution.SyncScript)
 		println(resolution.NewStateJson)
+		deserialize(resolution.NewStateJson, nil)
 	},
 }
 
