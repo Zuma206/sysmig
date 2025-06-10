@@ -9,14 +9,14 @@ import (
 )
 
 type Resolution struct {
-	MigrationScript string
-	SyncScript      string
-	NewStateJson    string
+	migrationScript string
+	syncScript      string
+	newStateJson    string
 }
 
-func resolve(configPath string) *Resolution {
+func resolve() *Resolution {
 	state := lua.NewState()
-	utils.HandleErr(lua.DoFile(state, configPath))
+	utils.HandleErr(lua.DoFile(state, flags.configPath))
 	state.PushString("old_state_value")
 	state.Call(1, 1)
 	return toResolution(state)
@@ -46,6 +46,11 @@ func toResolution(state *lua.State) *Resolution {
 
 	state.Pop(1)
 	state.Field(-1, RESOLUTION_STATE)
+	if state.IsNoneOrNil(-1) {
+		err := errors.New("resolution table must include a next_state field")
+		utils.HandleErr(err)
+	}
+
 	newState := serialize(state)
 	newStateJson, err := json.Marshal(newState)
 	if err != nil {
@@ -53,8 +58,8 @@ func toResolution(state *lua.State) *Resolution {
 	}
 
 	return &Resolution{
-		MigrationScript: migration,
-		SyncScript:      sync,
-		NewStateJson:    string(newStateJson),
+		migrationScript: migration,
+		syncScript:      sync,
+		newStateJson:    string(newStateJson),
 	}
 }

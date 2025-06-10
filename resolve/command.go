@@ -6,19 +6,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var flags = new(struct {
-	configPath string
-})
+type Flags struct {
+	configPath    string
+	migrationPath string
+	statePath     string
+	syncPath      string
+}
+
+var flags = new(Flags)
 
 var Command = cobra.Command{
 	Use:   "resolve",
 	Short: "Resolves a lua system configuration into a migration script",
 	Run: func(cmd *cobra.Command, args []string) {
-		resolution := resolve(flags.configPath)
-		println(resolution.MigrationScript)
-		println(resolution.SyncScript)
-		println(resolution.NewStateJson)
-		deserialize(resolution.NewStateJson, nil)
+		writeResolution(resolve())
 	},
 }
 
@@ -28,12 +29,44 @@ func init() {
 		getConfigPath(),
 		"the path of the system configuration to resolve",
 	)
+	Command.Flags().StringVarP(
+		&flags.migrationPath, "output", "o",
+		getMigrationPath(),
+		"the path to write the output migration script to",
+	)
+	Command.Flags().StringVarP(
+		&flags.statePath, "state", "s",
+		getStatePath(),
+		"the path to read/write the system state to",
+	)
+	Command.Flags().StringVarP(
+		&flags.syncPath, "sync", "n",
+		getSyncPath(),
+		"the path to write the output sync script to",
+	)
 }
 
-func getConfigPath() string {
+func getDir() string {
+
 	dir := os.Getenv("HOME")
 	if dir == "" {
 		dir = "/etc"
 	}
-	return dir + "/.sysmig/system.lua"
+	return dir + "/.sysmig"
+}
+
+func getConfigPath() string {
+	return getDir() + "/system.lua"
+}
+
+func getMigrationPath() string {
+	return getDir() + "/migrate.sh"
+}
+
+func getStatePath() string {
+	return getDir() + "/state.json"
+}
+
+func getSyncPath() string {
+	return getDir() + "/sync.sh"
 }
