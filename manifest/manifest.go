@@ -11,6 +11,8 @@ type ManifestFile struct {
 
 //go:embed manifest.json
 var manifest []byte
+
+// Unmarshalled manifest.json
 var Manifest ManifestFile
 
 func init() {
