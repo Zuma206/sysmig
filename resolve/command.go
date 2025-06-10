@@ -28,22 +28,22 @@ var Command = cobra.Command{
 func init() {
 	Command.Flags().StringVarP(
 		&flags.configPath, "config", "c",
-		getConfigPath(),
+		GetConfigPath(),
 		"the path of the system configuration to resolve",
 	)
 	Command.Flags().StringVarP(
 		&flags.migrationPath, "output", "o",
-		getMigrationPath(),
+		GetMigrationPath(),
 		"the path to write the output migration script to",
 	)
 	Command.Flags().StringVarP(
 		&flags.statePath, "state", "s",
-		getStatePath(),
+		GetStatePath(),
 		"the path to read/write the system state to",
 	)
 	Command.Flags().StringVarP(
 		&flags.syncPath, "sync", "n",
-		getSyncPath(),
+		GetSyncPath(),
 		"the path to write the output sync script to",
 	)
 }
@@ -58,18 +58,18 @@ func getDir() string {
 	return dir + "/.sysmig"
 }
 
-func getConfigPath() string {
+func GetConfigPath() string {
 	return getDir() + "/system.lua"
 }
 
-func getMigrationPath() string {
+func GetMigrationPath() string {
 	return getDir() + "/migrate.sh"
 }
 
-func getStatePath() string {
+func GetStatePath() string {
 	return getDir() + "/state.json"
 }
 
-func getSyncPath() string {
+func GetSyncPath() string {
 	return getDir() + "/sync.sh"
 }
