@@ -8,7 +8,7 @@ import (
 
 type LuaArgType struct {
 	Name      string
-	Validator func(state *lua.State) bool
+	Validator func(state *lua.State, index int) bool
 }
 
 type LuaArg struct {
@@ -39,8 +39,9 @@ func (luaFunc *LuaFunc) validateNArgs(state *lua.State) {
 }
 
 func (luaFunc *LuaFunc) validateArgTypes(state *lua.State) {
-	for _, arg := range luaFunc.Args {
-		if !arg.Type.Validator(state) {
+	top := state.Top()
+	for index, arg := range luaFunc.Args {
+		if !arg.Type.Validator(state, top+index) {
 			msg := fmt.Sprintf("%s must be of type %s", arg.Name, arg.Type.Name)
 			state.PushString(msg)
 			state.Error()
