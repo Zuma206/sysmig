@@ -6,14 +6,14 @@ import (
 	"github.com/Shopify/go-lua"
 )
 
-type LuaArgType struct {
-	Name      string
-	Validator func(state *lua.State, index int) bool
+type LuaType[T any] struct {
+	Name   string
+	Getter func(state *lua.State, index int) (T, bool)
 }
 
 type LuaArg struct {
 	Name string
-	Type LuaArgType
+	Type LuaType[any]
 }
 
 type LuaFunc struct {
@@ -44,7 +44,7 @@ func (luaFunc *LuaFunc) validateNArgs(state *lua.State) {
 func (luaFunc *LuaFunc) validateArgTypes(state *lua.State) {
 	top := state.Top()
 	for index, arg := range luaFunc.Args {
-		if !arg.Type.Validator(state, top+index) {
+		if _, ok := arg.Type.Getter(state, top+index); !ok {
 			msg := fmt.Sprintf("%s must be of type %s", arg.Name, arg.Type.Name)
 			state.PushString(msg)
 			state.Error()

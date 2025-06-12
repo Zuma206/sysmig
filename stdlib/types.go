@@ -3,7 +3,12 @@ package stdlib
 import "github.com/Shopify/go-lua"
 
 var (
-	ltable = LuaArgType{"table", func(state *lua.State, index int) bool {
-		return state.IsTable(index)
+	ltable = LuaType[any]{"table", func(state *lua.State, index int) (any, bool) {
+		value := state.ToValue(index)
+		ok := state.IsTable(index)
+		return value, ok
+	}}
+	lstring = LuaType[string]{"string", func(state *lua.State, index int) (string, bool) {
+		return state.ToString(index)
 	}}
 )
