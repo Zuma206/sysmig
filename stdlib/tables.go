@@ -1,7 +1,7 @@
 package stdlib
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/Shopify/go-lua"
 	"github.com/zuma206/sysmig/utils"
@@ -26,26 +26,27 @@ func (luaTable *LuaTable) Open(state *lua.State) {
 	state.SetField(-2, luaTable.Name)
 }
 
-type Pusher func(state *lua.State, index int)
-
-// Defines a function that pushes the `field` field of table `index` onto the stack
-func DefinePusher(field string) Pusher {
-	return func(state *lua.State, index int) {
-		state.Field(index, field)
-	}
+type LuaAttribute[T any] struct {
+	Name       string
+	Type       LuaType[T]
+	ParentName string
 }
 
-type Getter[T any] func(state *lua.State, index int) T
+func (attr *LuaAttribute[T]) Push(state *lua.State, index int) {
+	state.Field(index, attr.Name)
+}
 
-// Converts a pusher into a getter using a to method
-func DefineGetter[T any](pusher Pusher, luaType LuaType[T], typeErrMsg string) Getter[T] {
-	return func(state *lua.State, index int) T {
-		pusher(state, index)
-		value, ok := luaType.Getter(state, -1)
-		if !ok {
-			utils.HandleErr(errors.New(typeErrMsg))
-		}
-		state.Pop(1)
-		return value
+func (attr *LuaAttribute[T]) Get(state *lua.State, index int) T {
+	attr.Push(state, index)
+	value, ok := attr.Type.Getter(state, -1)
+	if !ok {
+		typeName := state.TypeOf(-1).String()
+		err := fmt.Errorf(
+			"invalid %s: %s must be of type %s, not %s",
+			attr.ParentName, attr.Name, attr.Type.Name, typeName,
+		)
+		utils.HandleErr(err)
 	}
+	state.Pop(1)
+	return value
 }
