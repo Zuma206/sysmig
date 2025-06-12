@@ -22,12 +22,14 @@ type LuaFunc struct {
 	Body lua.Function
 }
 
+// A pushable go-function for a LuaFunc
 func (luaFunc *LuaFunc) GoFunction(state *lua.State) int {
 	luaFunc.validateNArgs(state)
 	luaFunc.validateArgTypes(state)
 	return luaFunc.Body(state)
 }
 
+// Validates that there are the correct amount of arguments passed to a LuaFunc
 func (luaFunc *LuaFunc) validateNArgs(state *lua.State) {
 	givenArgs := state.Top()
 	requiredArgs := len(luaFunc.Args)
@@ -38,6 +40,7 @@ func (luaFunc *LuaFunc) validateNArgs(state *lua.State) {
 	}
 }
 
+// Validate that all passed functions are of the correct type
 func (luaFunc *LuaFunc) validateArgTypes(state *lua.State) {
 	top := state.Top()
 	for index, arg := range luaFunc.Args {
@@ -49,6 +52,7 @@ func (luaFunc *LuaFunc) validateArgTypes(state *lua.State) {
 	}
 }
 
+// Adds the lua func to the table at the top of the stack
 func (luaFunc *LuaFunc) Open(state *lua.State) {
 	state.PushGoFunction(luaFunc.GoFunction)
 	state.SetField(-2, luaFunc.Name)
