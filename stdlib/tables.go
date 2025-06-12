@@ -50,3 +50,7 @@ func (attr *LuaAttribute[T]) Get(state *lua.State, index int) T {
 	state.Pop(1)
 	return value
 }
+
+func (attr *LuaAttribute[T]) Set(state *lua.State, index int) {
+	state.SetField(index, attr.Name)
+}
