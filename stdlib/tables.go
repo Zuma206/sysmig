@@ -26,16 +26,19 @@ func (luaTable *LuaTable) Open(state *lua.State) {
 	state.SetField(-2, luaTable.Name)
 }
 
+// Represents a key `Name` on a table `ParentName` of type `Type`
 type LuaAttribute[T any] struct {
 	Name       string
 	Type       LuaType[T]
 	ParentName string
 }
 
+// Push an attribute from a table at `index` onto the stack
 func (attr *LuaAttribute[T]) Push(state *lua.State, index int) {
 	state.Field(index, attr.Name)
 }
 
+// Return an attribute from a table at `index` onto the stack
 func (attr *LuaAttribute[T]) Get(state *lua.State, index int) T {
 	attr.Push(state, index)
 	value, ok := attr.Type.Getter(state, -1)
@@ -51,6 +54,7 @@ func (attr *LuaAttribute[T]) Get(state *lua.State, index int) T {
 	return value
 }
 
+// Set the value at the top of the stack to the attribute on the table at `index`
 func (attr *LuaAttribute[T]) Set(state *lua.State, index int) {
 	state.SetField(index, attr.Name)
 }
