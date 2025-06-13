@@ -9,14 +9,6 @@ var (
 	MigratorFunc = LuaAttribute[lua.Function]{"func", lfunction, "migrator"}
 )
 
-func PushMigrator(state *lua.State, name string, function lua.Function, upValues uint8) {
-	state.CreateTable(0, 2)
-	state.PushString(name)
-	MigratorName.Set(state, -2)
-	state.PushGoClosure(function, upValues)
-	MigratorFunc.Set(state, -2)
-}
-
 var (
 	ResolutionMigration = LuaAttribute[string]{"migration", lstring, "resolution"}
 	ResolutionSync      = LuaAttribute[string]{"sync", lstring, "resolution"}
