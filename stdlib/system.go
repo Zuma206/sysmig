@@ -8,6 +8,12 @@ var System = LuaFunc{
 		{"migrators list", ltable},
 	},
 	Body: func(state *lua.State) int {
-		return 0
+		PushMigrator(state,
+			"system",
+			func(state *lua.State) int {
+				return 1
+			}, 1,
+		)
+		return 1
 	},
 }
