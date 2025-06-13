@@ -26,6 +26,7 @@ var systemMigratorFunc = LuaFunc{
 	Body: func(state *lua.State) int {
 		migratorsIndex := lua.UpValueIndex(1)
 		currentStateIndex := 1
+		currentStateNil := state.IsNil(currentStateIndex)
 		nMigrators := state.RawLength(migratorsIndex)
 		pushSystemResolution(state, nMigrators)
 		resolutionIndex := 2
@@ -35,11 +36,15 @@ var systemMigratorFunc = LuaFunc{
 		for i := range nMigrators {
 			state.RawGetInt(migratorsIndex, i+1)
 			MigratorFunc.Push(state, -1)
-			MigratorName.Push(state, -2)
-			state.Table(currentStateIndex)
+			if currentStateNil {
+				state.PushNil()
+			} else {
+				MigratorName.Push(state, -2)
+				state.Table(currentStateIndex)
+			}
 			state.Call(1, 1)
 			MigratorName.Push(state, -2)
-			ResolutionNextState.Push(state, -1)
+			ResolutionNextState.Push(state, -2)
 			state.SetTable(nextStateIndex)
 		}
 
