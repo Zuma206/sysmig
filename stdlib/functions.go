@@ -6,16 +6,21 @@ import (
 	"github.com/Shopify/go-lua"
 )
 
+// Represents a type in the lua vm
+// has a name, and a function to get
+// and/or validate an index is that type
 type LuaType[T any] struct {
 	Name   string
 	Getter func(state *lua.State, index int) (T, bool)
 }
 
+// Represents an stdlib function argument's name and type
 type LuaArg struct {
 	Name string
 	Type LuaType[any]
 }
 
+// Represents a stdlib function name, arguments, and go body
 type LuaFunc struct {
 	Name string
 	Args []LuaArg
