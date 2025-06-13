@@ -59,6 +59,7 @@ func clean() {
 	}
 }
 
+// Prints out what the clean command would do if it was confirmed
 func printCleans(cleanInstructions *[]*CleanInstruction) {
 	println("Run the command again with -y to delete:")
 	printed := false
@@ -73,6 +74,7 @@ func printCleans(cleanInstructions *[]*CleanInstruction) {
 	}
 }
 
+// Actually performs the clean, and deletes the files
 func performCleans(cleanInstructions *[]*CleanInstruction) {
 	for _, instruction := range *cleanInstructions {
 		if instruction.enabled {
