@@ -20,6 +20,7 @@ type Resolution struct {
 // to resolve it to a resolution struct
 func resolve(oldStateJson string) *Resolution {
 	state := lua.NewState()
+	stdlib.OpenLibraries(state)
 	utils.HandleErr(lua.DoFile(state, flags.configPath))
 	stdlib.MigratorFunc.Push(state, -1)
 	deserialize(oldStateJson, state)
