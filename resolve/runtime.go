@@ -2,6 +2,7 @@ package resolve
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/Shopify/go-lua"
 	"github.com/zuma206/sysmig/stdlib"
@@ -31,6 +32,9 @@ func resolve(oldStateJson string) *Resolution {
 // Takes a resolution table `index` and converts it into a resolution struct
 // May panic!
 func getResolution(state *lua.State, index int) *Resolution {
+	if !state.IsTable(index) {
+		utils.HandleErr(errors.New("improper config return: configs must return a resolution table"))
+	}
 	stdlib.ResolutionNextState.Push(state, index)
 	nextState := serialize(state)
 	state.Pop(1)
