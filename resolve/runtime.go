@@ -33,7 +33,8 @@ func resolve(oldStateJson string) *Resolution {
 // May panic!
 func getResolution(state *lua.State, index int) *Resolution {
 	if !state.IsTable(index) {
-		utils.HandleErr(errors.New("improper config return: configs must return a resolution table"))
+		err := errors.New("migrator did not return a resolution table")
+		utils.HandleErr(err)
 	}
 	stdlib.ResolutionNextState.Push(state, index)
 	nextState := serialize(state)
