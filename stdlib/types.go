@@ -2,6 +2,7 @@ package stdlib
 
 import "github.com/Shopify/go-lua"
 
+// Create a union type that passes validation for `typeA` or `typeB`
 func LuaUnion[A any, B any](typeA LuaType[A], typeB LuaType[B]) LuaType[any] {
 	return LuaType[any]{
 		Name: typeA.Name + "|" + typeB.Name,
@@ -19,6 +20,7 @@ func LuaUnion[A any, B any](typeA LuaType[A], typeB LuaType[B]) LuaType[any] {
 	}
 }
 
+// Basic lua types represented through the LuaType system
 var (
 	ltable = LuaType[any]{"table", func(state *lua.State, index int) (any, bool) {
 		value := state.ToValue(index)
