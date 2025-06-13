@@ -85,12 +85,14 @@ func runMigrations(
 func collapseMigrations(state *lua.State, nMigrators int, resolutionIndex int) {
 	for range nMigrators {
 		ResolutionMigration.Push(state, -1)
+		state.PushString("\n")
 		ResolutionMigration.Push(state, resolutionIndex)
-		state.Concat(2)
+		state.Concat(3)
 		ResolutionMigration.Set(state, resolutionIndex)
 		ResolutionSync.Push(state, -1)
+		state.PushString("\n")
 		ResolutionSync.Push(state, resolutionIndex)
-		state.Concat(2)
+		state.Concat(3)
 		ResolutionSync.Set(state, resolutionIndex)
 		state.Pop(2)
 	}
