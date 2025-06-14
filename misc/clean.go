@@ -12,6 +12,7 @@ import (
 type CleanFlags struct {
 	clearMigration bool
 	clearState     bool
+	clearSync      bool
 	confirm        bool
 }
 
@@ -33,11 +34,15 @@ func init() {
 	)
 	Clean.Flags().BoolVarP(
 		&cleanFlags.clearMigration, "migration", "m",
-		false, "delete the last migration",
+		false, "delete the last migration script",
 	)
 	Clean.Flags().BoolVarP(
 		&cleanFlags.clearState, "state", "s",
 		false, "deletes the current state (dangerous!)",
+	)
+	Clean.Flags().BoolVarP(
+		&cleanFlags.clearSync, "sync", "n",
+		false, "deletes the last sync script",
 	)
 }
 
@@ -51,6 +56,7 @@ func clean() {
 	instructions := []*CleanInstruction{
 		{"migration script", resolve.GetMigrationPath(), cleanFlags.clearMigration},
 		{"current state file", resolve.GetStatePath(), cleanFlags.clearState},
+		{"sync script", resolve.GetSyncPath(), cleanFlags.clearSync},
 	}
 	if !cleanFlags.confirm {
 		printCleans(&instructions)
