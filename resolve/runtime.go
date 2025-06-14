@@ -3,6 +3,7 @@ package resolve
 import (
 	"encoding/json"
 	"errors"
+	"path"
 
 	"github.com/Shopify/go-lua"
 	"github.com/zuma206/sysmig/stdlib"
@@ -21,7 +22,7 @@ type Resolution struct {
 // to resolve it to a resolution struct
 func resolve(oldStateJson string) *Resolution {
 	state := lua.NewState()
-	stdlib.OpenLibraries(state)
+	openLibraries(state)
 	utils.HandleErr(lua.DoFile(state, flags.configPath))
 	stdlib.MigratorFunc.Push(state, -1)
 	deserialize(oldStateJson, state)
@@ -47,4 +48,21 @@ func getResolution(state *lua.State, index int) *Resolution {
 		syncScript:      stdlib.ResolutionSync.Get(state, index),
 		nextStateJson:   string(nextStateJson),
 	}
+}
+
+// Opens the sysmig native stdlib and any required lua libraries
+func openLibraries(state *lua.State) {
+	stdlib.OpenLibraries(state)
+	lua.Require(state, "package", lua.PackageOpen, true)
+	patchPackagePath(state)
+}
+
+// Patches the package.path variable to look for packages in the directory
+// of the root config file, rather than the current directory
+func patchPackagePath(state *lua.State) {
+	path := path.Join(path.Dir(flags.configPath), "?.lua;")
+	state.Global("package")
+	state.PushString(path)
+	state.SetField(-2, "path")
+	state.Pop(1)
 }
