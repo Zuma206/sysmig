@@ -16,7 +16,11 @@ var migrator string
 //go:embed system.lua
 var system string
 
+//go:embed copy.lua
+var copy string
+
 func OpenStd(state *lua.State) {
+	require(state, "@std.copy", copy)
 	require(state, "@std.migrator", migrator)
 	require(state, "@std.system", system)
 	require(state, "@std", std)
