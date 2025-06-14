@@ -26,7 +26,7 @@ const (
 // Takes json for the previous state, and passes it through a LUA VM
 // to resolve it to a resolution struct
 func resolve(oldStateJson string) *Resolution {
-	println("Evaluating", flags.configPath)
+	println("Attempting to evaluate", flags.configPath)
 	state := lua.NewState()
 	openLibraries(state)
 	utils.HandleErr(lua.DoFile(state, flags.configPath))

@@ -1,6 +1,7 @@
 package resolve
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/zuma206/sysmig/scripts"
@@ -24,6 +25,9 @@ func writeResolution(resolution *Resolution) {
 // Read the state file
 func readState() string {
 	data, err := os.ReadFile(flags.statePath)
+	if os.IsNotExist(err) {
+		err = fmt.Errorf("%s (try running `sysmig init` if you haven't yet on this system)", err.Error())
+	}
 	utils.HandleErr(err)
 	return string(data)
 }
