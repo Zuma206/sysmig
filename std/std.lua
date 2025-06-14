@@ -5,5 +5,6 @@ return {
   migrator = require "@std.migrator",
   sequence = require "@std.sequence",
   set = require "@std.set",
-  system = require "@std.system"
+  system = require "@std.system",
+  rhel = require "@std.rhel"
 }

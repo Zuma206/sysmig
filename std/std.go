@@ -31,12 +31,16 @@ var sequence string
 //go:embed nothing.lua
 var nothing string
 
+//go:embed rhel.lua
+var rhel string
+
 func OpenStd(state *lua.State) {
 	require(state, "@std.map", mapLua)
 	require(state, "@std.copy", copy)
 	require(state, "@std.set", set)
 	require(state, "@std.migrator", migrator)
 	require(state, "@std.sequence", sequence)
+	require(state, "@std.rhel", rhel)
 	require(state, "@std.system", system)
 	require(state, "@std.nothing", nothing)
 	require(state, "@std", std)
