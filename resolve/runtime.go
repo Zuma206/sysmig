@@ -13,9 +13,9 @@ import (
 // Represents the 'resolution' of a system script:
 // migration script + sync script + next state
 type Resolution struct {
-	migrationScript string
-	syncScript      string
-	nextStateJson   string
+	migration string
+	sync      string
+	nextState []byte
 }
 
 // Migrator keys
@@ -57,9 +57,9 @@ func getResolution(state *lua.State, index int) *Resolution {
 	utils.HandleErr(err)
 
 	return &Resolution{
-		migrationScript: getStringKey(state, index, migration),
-		syncScript:      getStringKey(state, index, sync),
-		nextStateJson:   string(nextStateJson),
+		migration: getStringKey(state, index, migration),
+		sync:      getStringKey(state, index, sync),
+		nextState: nextStateJson,
 	}
 }
 

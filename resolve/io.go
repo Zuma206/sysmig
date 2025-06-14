@@ -3,6 +3,7 @@ package resolve
 import (
 	"os"
 
+	"github.com/zuma206/sysmig/scripts"
 	"github.com/zuma206/sysmig/utils"
 )
 
@@ -10,17 +11,12 @@ import (
 func writeResolution(resolution *Resolution) {
 	utils.HandleErr(os.WriteFile(
 		flags.migrationPath,
-		[]byte(resolution.migrationScript),
+		scripts.FmtMigration(resolution.migration, resolution.nextState, flags.statePath),
 		utils.EXECUTABLE_PERMS,
 	))
 	utils.HandleErr(os.WriteFile(
-		flags.statePath,
-		[]byte(resolution.nextStateJson),
-		utils.READWRITE_PERMS,
-	))
-	utils.HandleErr(os.WriteFile(
 		flags.syncPath,
-		[]byte(resolution.syncScript),
+		[]byte(resolution.sync),
 		utils.EXECUTABLE_PERMS,
 	))
 }
