@@ -13,8 +13,12 @@ var std string
 //go:embed migrator.lua
 var migrator string
 
+//go:embed system.lua
+var system string
+
 func OpenStd(state *lua.State) {
 	require(state, "@std.migrator", migrator)
+	require(state, "@std.system", system)
 	require(state, "@std", std)
 }
 
