@@ -1,3 +1,4 @@
+-- A simple table that contains all submodules of std
 return {
   copy = require "@std.copy",
   map = require "@std.map",

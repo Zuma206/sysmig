@@ -1,5 +1,7 @@
 local migrator = require "@std.migrator"
 
+-- A migrator multiplexer
+-- Takes a list of migrators, splits the state, and combines the resolution
 return function(migrators)
   return migrator("std.system", function(current_state)
     local sys_resolution = { migration = "", sync = "", next_state = {} }

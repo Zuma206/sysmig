@@ -2,6 +2,7 @@ local migrator = require "@std.migrator"
 local set = require "@std.set"
 local map = require "@std.map"
 
+-- Creates a migrator that acts upon a set, adding various commands for added/removed items
 return function(name, desired_sequence, handlers)
   return migrator(name, function(current_sequence)
     current_sequence = current_sequence or {}
