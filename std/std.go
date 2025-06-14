@@ -19,8 +19,12 @@ var system string
 //go:embed copy.lua
 var copy string
 
+//go:embed set.lua
+var set string
+
 func OpenStd(state *lua.State) {
 	require(state, "@std.copy", copy)
+	require(state, "@std.set", set)
 	require(state, "@std.migrator", migrator)
 	require(state, "@std.system", system)
 	require(state, "@std", std)
