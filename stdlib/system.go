@@ -84,16 +84,18 @@ func runMigrations(
 // Go back through the migration results and merge the migration and sync scripts
 func collapseMigrations(state *lua.State, nMigrators int, resolutionIndex int) {
 	for range nMigrators {
-		ResolutionMigration.Push(state, -1)
-		state.PushString("\n")
-		ResolutionMigration.Push(state, resolutionIndex)
-		state.Concat(3)
-		ResolutionMigration.Set(state, resolutionIndex)
-		ResolutionSync.Push(state, -1)
-		state.PushString("\n")
-		ResolutionSync.Push(state, resolutionIndex)
-		state.Concat(3)
-		ResolutionSync.Set(state, resolutionIndex)
+		collapseAttribute(state, &ResolutionMigration, resolutionIndex)
+		collapseAttribute(state, &ResolutionSync, resolutionIndex)
+		// Cleanup artifacts from runMigrations
 		state.Pop(2)
 	}
+}
+
+// Concats (with a newline) a given attribute from the table at -1 and `tableIndex`, onto `tableIndex`
+func collapseAttribute(state *lua.State, attribute *LuaAttribute[string], tableIndex int) {
+	attribute.Push(state, -1)
+	state.PushString("\n")
+	attribute.Push(state, tableIndex)
+	state.Concat(3)
+	attribute.Set(state, tableIndex)
 }
