@@ -22,6 +22,7 @@ function set.diff(s1, s2)
   for value, _ in pairs(s2) do
     s3[value] = nil
   end
+  return s3
 end
 
 function set.has(s1, value)
@@ -30,8 +31,10 @@ end
 
 function set.to_sequence(s1)
   local t1 = {}
-  for value, _ in pairs(t1) do
-    table.insert(t1, value)
+  for value, has in pairs(s1) do
+    if has then
+      table.insert(t1, value)
+    end
   end
   return t1
 end
