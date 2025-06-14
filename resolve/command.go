@@ -22,6 +22,7 @@ var Command = cobra.Command{
 	Short: "Resolves a lua system configuration into a migration script",
 	Run: func(cmd *cobra.Command, args []string) {
 		writeResolution(resolve(readState()))
+		println("Done")
 	},
 }
 
