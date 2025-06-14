@@ -28,4 +28,12 @@ function set.has(s1, value)
   return s1[value] or false
 end
 
+function set.to_sequence(s1)
+  local t1 = {}
+  for value, _ in pairs(t1) do
+    table.insert(t1, value)
+  end
+  return t1
+end
+
 return set
