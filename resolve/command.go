@@ -1,9 +1,12 @@
 package resolve
 
 import (
+	"errors"
 	"os"
+	"path"
 
 	"github.com/spf13/cobra"
+	"github.com/zuma206/sysmig/utils"
 )
 
 type Flags struct {
@@ -52,25 +55,33 @@ func init() {
 // $HOME/.sysmig
 // or /etc/.sysmig
 func getDir() string {
-	dir := os.Getenv("HOME")
-	if dir == "" {
-		dir = "/etc"
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		utils.HandleErr(errors.New("cannot find your home directory"))
 	}
-	return dir + "/.sysmig"
+	return path.Join(dir, ".sysmig")
+}
+
+func GetConfigDir() string {
+	dir, err := os.UserConfigDir()
+	if err != nil {
+		utils.HandleErr(errors.New("cannot find your config directory"))
+	}
+	return dir
 }
 
 func GetConfigPath() string {
-	return getDir() + "/system.lua"
+	return path.Join(GetConfigDir(), "sysmig", "system.lua")
 }
 
 func GetMigrationPath() string {
-	return getDir() + "/migrate.sh"
+	return path.Join(getDir(), "migrate.sh")
 }
 
 func GetStatePath() string {
-	return getDir() + "/state.json"
+	return path.Join(getDir(), "current-system-state.json")
 }
 
 func GetSyncPath() string {
-	return getDir() + "/sync.sh"
+	return path.Join(getDir(), "sync.sh")
 }
