@@ -10,7 +10,11 @@ import (
 //go:embed std.lua
 var std string
 
+//go:embed migrator.lua
+var migrator string
+
 func OpenStd(state *lua.State) {
+	require(state, "@std.migrator", migrator)
 	require(state, "@std", std)
 }
 

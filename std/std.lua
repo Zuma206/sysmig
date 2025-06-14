@@ -1,9 +1,6 @@
 local std = {}
 
--- Create a basic migrator
-function std.migrator(name, func)
-  return { name = name, func = func }
-end
+std.migrator = require "@std.migrator"
 
 -- A blank migrator that does absolutely nothing
 std.nothing = std.migrator("nothing", function()
