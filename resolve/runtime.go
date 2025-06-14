@@ -65,7 +65,7 @@ func getResolution(state *lua.State, index int) *Resolution {
 
 // Opens the sysmig native stdlib and any required lua libraries
 func openLibraries(state *lua.State) {
-	lua.Require(state, "package", lua.PackageOpen, true)
+	lua.OpenLibraries(state)
 	patchPackagePath(state)
 }
 
