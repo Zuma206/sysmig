@@ -49,6 +49,6 @@ func hydrateArray(array []any, state *lua.State) {
 	state.CreateTable(len(array), 0)
 	for i, value := range array {
 		hydrate(value, state)
-		state.RawSetInt(-2, i)
+		state.RawSetInt(-2, i+1)
 	}
 }
