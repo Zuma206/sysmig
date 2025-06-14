@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/zuma206/sysmig/resolve"
 	"github.com/zuma206/sysmig/utils"
 )
 
@@ -19,7 +18,7 @@ var Init = cobra.Command{
 
 // Creates the state file if it doesn't exist, may panic
 func runInit() {
-	path := resolve.GetStatePath()
+	path := utils.GetStatePath()
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
 		createStateFile(path)

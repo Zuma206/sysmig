@@ -1,10 +1,6 @@
 package resolve
 
 import (
-	"errors"
-	"os"
-	"path"
-
 	"github.com/spf13/cobra"
 	"github.com/zuma206/sysmig/utils"
 )
@@ -32,56 +28,22 @@ var Command = cobra.Command{
 func init() {
 	Command.Flags().StringVarP(
 		&flags.configPath, "config", "c",
-		GetConfigPath(),
+		utils.GetConfigPath(),
 		"the path of the system configuration to resolve",
 	)
 	Command.Flags().StringVarP(
 		&flags.migrationPath, "output", "o",
-		GetMigrationPath(),
+		utils.GetMigrationPath(),
 		"the path to write the output migration script to",
 	)
 	Command.Flags().StringVarP(
 		&flags.statePath, "state", "s",
-		GetStatePath(),
+		utils.GetStatePath(),
 		"the path to read/write the system state to",
 	)
 	Command.Flags().StringVarP(
 		&flags.syncPath, "sync", "n",
-		GetSyncPath(),
+		utils.GetSyncPath(),
 		"the path to write the output sync script to",
 	)
-}
-
-// $HOME/.sysmig
-// or /etc/.sysmig
-func getDir() string {
-	dir, err := os.UserHomeDir()
-	if err != nil {
-		utils.HandleErr(errors.New("cannot find your home directory"))
-	}
-	return path.Join(dir, ".sysmig")
-}
-
-func GetConfigDir() string {
-	dir, err := os.UserConfigDir()
-	if err != nil {
-		utils.HandleErr(errors.New("cannot find your config directory"))
-	}
-	return dir
-}
-
-func GetConfigPath() string {
-	return path.Join(GetConfigDir(), "sysmig", "system.lua")
-}
-
-func GetMigrationPath() string {
-	return path.Join(getDir(), "migrate.sh")
-}
-
-func GetStatePath() string {
-	return path.Join(getDir(), "current-system-state.json")
-}
-
-func GetSyncPath() string {
-	return path.Join(getDir(), "sync.sh")
 }

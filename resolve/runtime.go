@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"path"
+	"strings"
 
 	"github.com/Shopify/go-lua"
+	"github.com/zuma206/sysmig/std"
 	"github.com/zuma206/sysmig/utils"
 )
 
@@ -66,15 +68,17 @@ func getResolution(state *lua.State, index int) *Resolution {
 // Opens the sysmig native stdlib and any required lua libraries
 func openLibraries(state *lua.State) {
 	lua.OpenLibraries(state)
+	std.OpenStd(state)
 	patchPackagePath(state)
 }
 
 // Patches the package.path variable to look for packages in the directory
 // of the root config file, rather than the current directory
 func patchPackagePath(state *lua.State) {
-	path := path.Join(path.Dir(flags.configPath), "?.lua;")
+	localPath := path.Join(path.Dir(flags.configPath), "?.lua;")
+	stdPath := path.Join(path.Join(utils.GetDir(), "?.lua;"))
 	state.Global("package")
-	state.PushString(path)
+	state.PushString(strings.Join([]string{localPath, stdPath}, ""))
 	state.SetField(-2, "path")
 	state.Pop(1)
 }

@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/zuma206/sysmig/resolve"
 	"github.com/zuma206/sysmig/utils"
 )
 
@@ -54,9 +53,9 @@ type CleanInstruction struct {
 
 func clean() {
 	instructions := []*CleanInstruction{
-		{"migration script", resolve.GetMigrationPath(), cleanFlags.clearMigration},
-		{"current state file", resolve.GetStatePath(), cleanFlags.clearState},
-		{"sync script", resolve.GetSyncPath(), cleanFlags.clearSync},
+		{"migration script", utils.GetMigrationPath(), cleanFlags.clearMigration},
+		{"current state file", utils.GetStatePath(), cleanFlags.clearState},
+		{"sync script", utils.GetSyncPath(), cleanFlags.clearSync},
 	}
 	if !cleanFlags.confirm {
 		printCleans(&instructions)
