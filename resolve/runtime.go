@@ -3,10 +3,10 @@ package resolve
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"path"
 
 	"github.com/Shopify/go-lua"
-	"github.com/zuma206/sysmig/stdlib"
 	"github.com/zuma206/sysmig/utils"
 )
 
@@ -18,6 +18,11 @@ type Resolution struct {
 	nextStateJson   string
 }
 
+// Migrator keys
+const (
+	function = "func"
+)
+
 // Takes json for the previous state, and passes it through a LUA VM
 // to resolve it to a resolution struct
 func resolve(oldStateJson string) *Resolution {
@@ -25,11 +30,18 @@ func resolve(oldStateJson string) *Resolution {
 	state := lua.NewState()
 	openLibraries(state)
 	utils.HandleErr(lua.DoFile(state, flags.configPath))
-	stdlib.MigratorFunc.Push(state, -1)
+	state.Field(-1, function)
 	deserialize(oldStateJson, state)
 	state.Call(1, 1)
 	return getResolution(state, -1)
 }
+
+// Resolution keys
+const (
+	nextState = "next_state"
+	migration = "migration"
+	sync      = "sync"
+)
 
 // Takes a resolution table `index` and converts it into a resolution struct
 // May panic!
@@ -38,22 +50,21 @@ func getResolution(state *lua.State, index int) *Resolution {
 		err := errors.New("migrator did not return a resolution table")
 		utils.HandleErr(err)
 	}
-	stdlib.ResolutionNextState.Push(state, index)
-	nextState := serialize(state)
+	state.Field(index, nextState)
+	nextStateSerialized := serialize(state)
 	state.Pop(1)
-	nextStateJson, err := json.Marshal(nextState)
+	nextStateJson, err := json.Marshal(nextStateSerialized)
 	utils.HandleErr(err)
 
 	return &Resolution{
-		migrationScript: stdlib.ResolutionMigration.Get(state, index),
-		syncScript:      stdlib.ResolutionSync.Get(state, index),
+		migrationScript: getStringKey(state, index, migration),
+		syncScript:      getStringKey(state, index, sync),
 		nextStateJson:   string(nextStateJson),
 	}
 }
 
 // Opens the sysmig native stdlib and any required lua libraries
 func openLibraries(state *lua.State) {
-	stdlib.OpenLibraries(state)
 	lua.Require(state, "package", lua.PackageOpen, true)
 	patchPackagePath(state)
 }
@@ -66,4 +77,15 @@ func patchPackagePath(state *lua.State) {
 	state.PushString(path)
 	state.SetField(-2, "path")
 	state.Pop(1)
+}
+
+// Get a string field from a table, erroring if it's not a string
+func getStringKey(state *lua.State, index int, key string) string {
+	state.Field(index, key)
+	value, ok := state.ToString(-1)
+	if !ok {
+		utils.HandleErr(fmt.Errorf("cannot get key %s", key))
+	}
+	state.Pop(1)
+	return value
 }
