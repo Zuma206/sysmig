@@ -1,17 +1,8 @@
-local std = {}
-
-std.migrator = require "@std.migrator"
-std.system = require "@std.system"
-std.copy = require "@std.copy"
-
--- A blank migrator that does absolutely nothing
-std.nothing = std.migrator("nothing", function()
-  local script = "# std.nothing"
-  return {
-    migration = script,
-    next_state = nil,
-    sync = script,
-  }
-end)
-
-return std
+return {
+  copy = require "@std.copy",
+  map = require "@std.map",
+  migrator = require "@std.migrator",
+  sequence = require "@std.sequence",
+  set = require "@std.set",
+  system = require "@std.system"
+}
