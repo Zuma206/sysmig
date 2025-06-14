@@ -14,7 +14,7 @@ var sync string
 
 func FmtMigration(script string, nextState []byte, statePath string) []byte {
 	nextStateB64 := base64.StdEncoding.EncodeToString(nextState)
-	fmtScript := fmt.Sprintf(migrate, script, nextState, nextStateB64, statePath)
+	fmtScript := fmt.Sprintf(migrate, script, nextStateB64, statePath)
 	return []byte(fmtScript)
 }
 
