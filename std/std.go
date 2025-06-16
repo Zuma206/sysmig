@@ -34,6 +34,9 @@ var nothing string
 //go:embed rhel.lua
 var rhel string
 
+//go:embed deb.lua
+var deb string
+
 func OpenStd(state *lua.State) {
 	require(state, "@std.map", mapLua)
 	require(state, "@std.copy", copy)
@@ -41,6 +44,7 @@ func OpenStd(state *lua.State) {
 	require(state, "@std.migrator", migrator)
 	require(state, "@std.sequence", sequence)
 	require(state, "@std.rhel", rhel)
+	require(state, "@std.deb", deb)
 	require(state, "@std.system", system)
 	require(state, "@std.nothing", nothing)
 	require(state, "@std", std)

@@ -6,5 +6,6 @@ return {
   sequence = require "@std.sequence",
   set = require "@std.set",
   system = require "@std.system",
-  rhel = require "@std.rhel"
+  rhel = require "@std.rhel",
+  deb = require "@std.deb",
 }
