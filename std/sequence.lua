@@ -1,5 +1,5 @@
 local migrator = require "@std.migrator"
-local set = require "@std.set"
+local Set = require "@std.Set"
 local map = require "@std.map"
 
 local function get_group_script(list, handle, handle_no)
@@ -31,13 +31,13 @@ local function get_sequence_script(added, removed, handlers)
 end
 
 -- Creates a migrator that acts upon a set, adding various commands for added/removed items
-return function(name, desired_sequence, handlers)
+return function(name, desired_sequence, handlers, key)
   return migrator(name, function(current_sequence)
     current_sequence = current_sequence or {}
-    local current = set.from(current_sequence)
-    local desired = set.from(desired_sequence)
-    local added = set.to_sequence(set.diff(desired, current))
-    local removed = set.to_sequence(set.diff(current, desired))
+    local current = Set:create(current_sequence, key)
+    local desired = Set:create(desired_sequence, key)
+    local added = desired:diff(current):to_table()
+    local removed = current:diff(desired):to_table()
     return {
       next_state = desired_sequence,
       migration = get_sequence_script(added, removed, handlers.migration),

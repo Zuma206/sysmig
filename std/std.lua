@@ -4,7 +4,7 @@ return {
   map = require "@std.map",
   migrator = require "@std.migrator",
   sequence = require "@std.sequence",
-  set = require "@std.set",
+  Set = require "@std.Set",
   system = require "@std.system",
   rhel = require "@std.rhel",
   deb = require "@std.deb",

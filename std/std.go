@@ -19,7 +19,7 @@ var system string
 //go:embed copy.lua
 var copy string
 
-//go:embed set.lua
+//go:embed Set.lua
 var set string
 
 //go:embed map.lua
@@ -40,7 +40,7 @@ var deb string
 func OpenStd(state *lua.State) {
 	require(state, "@std.map", mapLua)
 	require(state, "@std.copy", copy)
-	require(state, "@std.set", set)
+	require(state, "@std.Set", set)
 	require(state, "@std.migrator", migrator)
 	require(state, "@std.sequence", sequence)
 	require(state, "@std.rhel", rhel)
