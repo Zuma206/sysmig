@@ -4,7 +4,7 @@ on:
     tags:
       - v*.*.*
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,5 +14,5 @@ jobs:
       - run: go build
       - uses: softprops/action-gh-release@v2
         with:
-          body-path: manifest/release.md
+          body_path: manifest/release.md
           files: sysmig
