@@ -1,6 +1,7 @@
-package resolve
+package std
 
 import (
+	"encoding/json"
 	"errors"
 	"strconv"
 
@@ -8,8 +9,24 @@ import (
 	"github.com/zuma206/sysmig/utils"
 )
 
+func serializeLua(state *lua.State) int {
+	state.PushGoFunction(serialize)
+	return 1
+}
+
+func serialize(state *lua.State) int {
+	value := Serialize(state)
+	result, err := json.Marshal(value)
+	if err != nil {
+		state.PushString(err.Error())
+		state.Error()
+	}
+	state.PushString(string(result))
+	return 1
+}
+
 // Takes state on the lua stack and converts it to a go variable
-func serialize(state *lua.State) any {
+func Serialize(state *lua.State) any {
 	switch state.TypeOf(-1) {
 	case lua.TypeTable:
 		return serializeTable(state)
@@ -24,7 +41,7 @@ func serializeTable(state *lua.State) any {
 	array := []any{}
 	state.PushNil()
 	for state.Next(-2) {
-		value := serialize(state)
+		value := Serialize(state)
 		state.Pop(1)
 		// If the key is not a number, we need to upgrade this to a map!
 		if !state.IsNumber(-1) {
@@ -44,7 +61,7 @@ func serializeAsHashtable(state *lua.State, array []any, value any) map[string]a
 		hashmap[strconv.Itoa(i)] = value
 	}
 	for state.Next(-2) {
-		value := serialize(state)
+		value := Serialize(state)
 		state.Pop(1)
 		hashmap[getKey(state)] = value
 	}
