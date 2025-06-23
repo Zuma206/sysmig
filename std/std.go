@@ -38,6 +38,7 @@ var rhel string
 var deb string
 
 func OpenStd(state *lua.State) {
+	lua.Require(state, "@std.serialize", serializeLua, false)
 	require(state, "@std.map", mapLua)
 	require(state, "@std.copy", copy)
 	require(state, "@std.Set", set)

@@ -8,4 +8,5 @@ return {
   system = require "@std.system",
   rhel = require "@std.rhel",
   deb = require "@std.deb",
+  serialize = require "@std.serialize",
 }

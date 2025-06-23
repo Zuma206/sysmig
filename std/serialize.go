@@ -1,12 +1,29 @@
 package std
 
 import (
+	"encoding/json"
 	"errors"
 	"strconv"
 
 	"github.com/Shopify/go-lua"
 	"github.com/zuma206/sysmig/utils"
 )
+
+func serializeLua(state *lua.State) int {
+	state.PushGoFunction(serialize)
+	return 1
+}
+
+func serialize(state *lua.State) int {
+	value := Serialize(state)
+	result, err := json.Marshal(value)
+	if err != nil {
+		state.PushString(err.Error())
+		state.Error()
+	}
+	state.PushString(string(result))
+	return 1
+}
 
 // Takes state on the lua stack and converts it to a go variable
 func Serialize(state *lua.State) any {
