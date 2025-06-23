@@ -10,7 +10,8 @@ import (
 //go:embed lua/*
 var stdLuaSources embed.FS
 
-func OpenStd(state *lua.State) {
+func OpenStd(state *lua.State, configDir string) {
+	lua.Require(state, "@std.path", pathLua(configDir), false)
 	lua.Require(state, "@std.serialize", serializeLua, false)
 	requireModules(state,
 		"entries",

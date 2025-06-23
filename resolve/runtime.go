@@ -67,15 +67,16 @@ func getResolution(state *lua.State, index int) *Resolution {
 
 // Opens the sysmig native stdlib and any required lua libraries
 func openLibraries(state *lua.State) {
+	configDir := path.Dir(flags.configPath)
 	lua.OpenLibraries(state)
-	std.OpenStd(state)
-	patchPackagePath(state)
+	std.OpenStd(state, configDir)
+	patchPackagePath(state, configDir)
 }
 
 // Patches the package.path variable to look for packages in the directory
 // of the root config file, rather than the current directory
-func patchPackagePath(state *lua.State) {
-	localPath := path.Join(path.Dir(flags.configPath), "?.lua;")
+func patchPackagePath(state *lua.State, configDir string) {
+	localPath := path.Join(configDir, "?.lua;")
 	stdPath := path.Join(path.Join(utils.GetDir(), "?.lua;"))
 	state.Global("package")
 	state.PushString(strings.Join([]string{localPath, stdPath}, ""))

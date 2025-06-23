@@ -10,4 +10,5 @@ return {
   deb = require "@std.deb",
   serialize = require "@std.serialize",
   files = require "@std.files",
+  path = require "@std.path",
 }
