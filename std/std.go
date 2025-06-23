@@ -37,7 +37,11 @@ var rhel string
 //go:embed deb.lua
 var deb string
 
+//go:embed entries.lua
+var entries string
+
 func OpenStd(state *lua.State) {
+	require(state, "@std.entries", entries)
 	lua.Require(state, "@std.serialize", serializeLua, false)
 	require(state, "@std.map", mapLua)
 	require(state, "@std.copy", copy)
