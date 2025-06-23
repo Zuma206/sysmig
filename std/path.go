@@ -15,7 +15,7 @@ func pathLua(configPath string) lua.Function {
 				state.PushString("std.path must be passed a string")
 				state.Error()
 			}
-			if !strings.HasPrefix(desiredPath, "/") || strings.HasPrefix(desiredPath, "~") {
+			if !strings.HasPrefix(desiredPath, "/") && !strings.HasPrefix(desiredPath, "~") {
 				state.PushString(path.Join(configPath, desiredPath))
 			}
 			return 1
