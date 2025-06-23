@@ -11,4 +11,5 @@ return {
   serialize = require "@std.serialize",
   files = require "@std.files",
   path = require "@std.path",
+  dir = require "@std.dir",
 }

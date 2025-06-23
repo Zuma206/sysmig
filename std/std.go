@@ -13,6 +13,7 @@ var stdLuaSources embed.FS
 func OpenStd(state *lua.State, configDir string) {
 	lua.Require(state, "@std.path", pathLua(configDir), false)
 	lua.Require(state, "@std.serialize", serializeLua, false)
+	lua.Require(state, "@std.dir", dirLua, false)
 	requireModules(state,
 		"entries",
 		"map",
