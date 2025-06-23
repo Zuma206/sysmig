@@ -1,62 +1,43 @@
 package std
 
 import (
-	_ "embed"
+	"embed"
 
 	"github.com/Shopify/go-lua"
 	"github.com/zuma206/sysmig/utils"
 )
 
-//go:embed std.lua
-var std string
-
-//go:embed migrator.lua
-var migrator string
-
-//go:embed system.lua
-var system string
-
-//go:embed copy.lua
-var copy string
-
-//go:embed Set.lua
-var set string
-
-//go:embed map.lua
-var mapLua string
-
-//go:embed sequence.lua
-var sequence string
-
-//go:embed nothing.lua
-var nothing string
-
-//go:embed rhel.lua
-var rhel string
-
-//go:embed deb.lua
-var deb string
-
-//go:embed entries.lua
-var entries string
-
-//go:embed files.lua
-var files string
+//go:embed lua/*
+var stdLuaSources embed.FS
 
 func OpenStd(state *lua.State) {
-	require(state, "@std.entries", entries)
 	lua.Require(state, "@std.serialize", serializeLua, false)
-	require(state, "@std.map", mapLua)
-	require(state, "@std.copy", copy)
-	require(state, "@std.Set", set)
-	require(state, "@std.migrator", migrator)
-	require(state, "@std.sequence", sequence)
-	require(state, "@std.rhel", rhel)
-	require(state, "@std.deb", deb)
-	require(state, "@std.system", system)
-	require(state, "@std.nothing", nothing)
-	require(state, "@std.files", files)
-	require(state, "@std", std)
+	requireModules(state,
+		"entries",
+		"map",
+		"copy",
+		"Set",
+		"migrator",
+		"sequence",
+		"rhel",
+		"deb",
+		"system",
+		"nothing",
+		"files",
+	)
+	require(state, "@std", getCode("std"))
+}
+
+func getCode(name string) string {
+	content, err := stdLuaSources.ReadFile("lua/" + name + ".lua")
+	utils.HandleErr(err)
+	return string(content)
+}
+
+func requireModules(state *lua.State, moduleNames ...string) {
+	for _, moduleName := range moduleNames {
+		require(state, "@std."+moduleName, getCode(moduleName))
+	}
 }
 
 func require(state *lua.State, name string, code string) {
