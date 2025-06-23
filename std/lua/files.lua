@@ -3,6 +3,7 @@ local sequence = require "@std.sequence"
 local entries = require "@std.entries"
 local dir = require "@std.dir"
 local path = require "@std.path"
+local map = require "@std.map"
 
 local function pass_paths(func)
   return function(file)
@@ -26,8 +27,10 @@ local function copy_file(source, destination)
 end
 
 return function(files)
-  return sequence("std.files", entries(files), {
-    migration = { add = pass_paths(copy_file), remove = pass_paths(remove_file) },
-    sync = { add = pass_paths(copy_file) }
+  local file_entries = entries(files)
+  local pass_paths_copy_file = pass_paths(copy_file)
+  return sequence("std.files", file_entries, {
+    migration = { add = pass_paths_copy_file, remove = pass_paths(remove_file) },
+    sync = table.concat(map(file_entries, pass_paths_copy_file), "\n")
   }, serialize)
 end
