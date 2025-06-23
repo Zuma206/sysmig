@@ -53,7 +53,7 @@ func getResolution(state *lua.State, index int) *Resolution {
 		utils.HandleErr(err)
 	}
 	state.Field(index, nextState)
-	nextStateSerialized := serialize(state)
+	nextStateSerialized := std.Serialize(state)
 	state.Pop(1)
 	nextStateJson, err := json.Marshal(nextStateSerialized)
 	utils.HandleErr(err)

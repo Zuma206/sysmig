@@ -1,4 +1,4 @@
-package resolve
+package std
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 )
 
 // Takes state on the lua stack and converts it to a go variable
-func serialize(state *lua.State) any {
+func Serialize(state *lua.State) any {
 	switch state.TypeOf(-1) {
 	case lua.TypeTable:
 		return serializeTable(state)
@@ -24,7 +24,7 @@ func serializeTable(state *lua.State) any {
 	array := []any{}
 	state.PushNil()
 	for state.Next(-2) {
-		value := serialize(state)
+		value := Serialize(state)
 		state.Pop(1)
 		// If the key is not a number, we need to upgrade this to a map!
 		if !state.IsNumber(-1) {
@@ -44,7 +44,7 @@ func serializeAsHashtable(state *lua.State, array []any, value any) map[string]a
 		hashmap[strconv.Itoa(i)] = value
 	}
 	for state.Next(-2) {
-		value := serialize(state)
+		value := Serialize(state)
 		state.Pop(1)
 		hashmap[getKey(state)] = value
 	}
