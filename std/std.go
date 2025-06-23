@@ -40,6 +40,9 @@ var deb string
 //go:embed entries.lua
 var entries string
 
+//go:embed files.lua
+var files string
+
 func OpenStd(state *lua.State) {
 	require(state, "@std.entries", entries)
 	lua.Require(state, "@std.serialize", serializeLua, false)
@@ -52,6 +55,7 @@ func OpenStd(state *lua.State) {
 	require(state, "@std.deb", deb)
 	require(state, "@std.system", system)
 	require(state, "@std.nothing", nothing)
+	require(state, "@std.files", files)
 	require(state, "@std", std)
 }
 
