@@ -1,8 +1,8 @@
 local sequence = require "@std.sequence"
-local rhel = {}
+local dnf = {}
 
-function rhel.packages(desired_packages)
-  return sequence("std.rhel.packages", desired_packages, {
+function dnf.packages(desired_packages)
+  return sequence("std.dnf.packages", desired_packages, {
     migration = {
       added = function(added)
         return "sudo dnf install -y " .. table.concat(added, " ")
@@ -15,4 +15,4 @@ function rhel.packages(desired_packages)
   })
 end
 
-return rhel
+return dnf

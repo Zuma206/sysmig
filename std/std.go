@@ -21,7 +21,7 @@ func OpenStd(state *lua.State, configDir string) {
 		"Set",
 		"migrator",
 		"sequence",
-		"rhel",
+		"dnf",
 		"deb",
 		"system",
 		"nothing",
