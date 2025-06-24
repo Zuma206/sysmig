@@ -28,6 +28,7 @@ func OpenStd(state *lua.State, configDir string) {
 		"file",
 		"files",
 		"symlinks",
+		"flatpak",
 	)
 }
 
