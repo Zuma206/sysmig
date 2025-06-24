@@ -18,4 +18,18 @@ function flatpak.remotes(remotes)
   }, serialize)
 end
 
+function flatpak.packages(packages)
+  return sequence("std.flatpak.packages", packages, {
+    migration = {
+      added = function(packages)
+        return "flatpak install -y " .. table.concat(packages, " ")
+      end,
+      removed = function(packages)
+        return "flatpak remove -y " .. table.concat(packages, " ")
+      end
+    },
+    sync = "sudo flatpak update"
+  })
+end
+
 return flatpak
