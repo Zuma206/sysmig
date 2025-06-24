@@ -1,7 +1,7 @@
 local sequence = require "@std.sequence"
-local deb = {}
+local apt = {}
 
-function deb.packages(desired_packages)
+function apt.packages(desired_packages)
   return sequence("std.deb.packages", desired_packages, {
     migration = {
       added = function(added)
@@ -16,4 +16,4 @@ sudo apt upgrade -y]]
   })
 end
 
-return deb
+return apt
