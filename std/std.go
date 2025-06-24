@@ -22,7 +22,7 @@ func OpenStd(state *lua.State, configDir string) {
 		"migrator",
 		"sequence",
 		"dnf",
-		"deb",
+		"apt",
 		"system",
 		"nothing",
 		"file",
