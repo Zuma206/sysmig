@@ -27,6 +27,7 @@ func OpenStd(state *lua.State, configDir string) {
 		"nothing",
 		"file",
 		"files",
+		"symlinks",
 	)
 	require(state, "@std", getCode("std"))
 }
