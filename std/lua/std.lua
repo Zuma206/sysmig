@@ -12,4 +12,5 @@ return {
   files = require "@std.files",
   path = require "@std.path",
   dir = require "@std.dir",
+  file = require "@std.file",
 }
