@@ -1,3 +1,3 @@
 package utils
 
-const VERSION = "v0.0.0-unversioned-development"
+var VERSION = "v0.0.0-unversioned-development"
