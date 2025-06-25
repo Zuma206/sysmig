@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/zuma206/sysmig/misc"
 	"github.com/zuma206/sysmig/resolve"
+	"github.com/zuma206/sysmig/updates"
 )
 
 var command = cobra.Command{
@@ -16,6 +17,7 @@ func init() {
 	command.AddCommand(&misc.Version)
 	command.AddCommand(&misc.Clean)
 	command.AddCommand(&misc.Init)
+	command.AddCommand(&updates.Command)
 }
 
 func main() {
