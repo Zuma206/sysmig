@@ -3,7 +3,6 @@ package updates
 import (
 	"errors"
 	"os"
-	"path"
 
 	"github.com/spf13/cobra"
 	"github.com/zuma206/sysmig/utils"
@@ -20,25 +19,17 @@ var Command = cobra.Command{
 const binaryAssetName = "sysmig"
 
 func performUpdate() {
+	println("Checking for updates...")
 	latestRelease := GetReleases().GetLatestRelease()
 	if latestRelease == nil {
 		utils.HandleErr(errors.New("cannot find the latest release"))
 		return
 	}
-
 	if latestRelease.TagName == utils.VERSION {
 		println("You're already on the latest release")
 		os.Exit(0)
+	} else {
+		println("Update found, downloading...")
 	}
-
-	binaryData := latestRelease.GetAsset(binaryAssetName).Download()
-	homeDir, err := os.UserHomeDir()
-	utils.HandleErr(err)
-	err = os.MkdirAll(path.Join(homeDir, ".sysmig"), utils.READWRITE_PERMS)
-	utils.HandleErr(err)
-	err = os.WriteFile(path.Join(homeDir, ".sysmig", "sysmig"), *binaryData, utils.READWRITE_PERMS)
-	utils.HandleErr(err)
-
-	utils.HandleErr(err)
-	println("Downloaded the latest version")
+	install(latestRelease)
 }
