@@ -3,6 +3,7 @@ package updates
 import (
 	"errors"
 	"os"
+	"os/user"
 
 	"github.com/spf13/cobra"
 	"github.com/zuma206/sysmig/utils"
@@ -19,6 +20,7 @@ var Command = cobra.Command{
 const binaryAssetName = "sysmig"
 
 func performUpdate() {
+	checkPrivilege()
 	println("Checking for updates...")
 	latestRelease := GetReleases().GetLatestRelease()
 	if latestRelease == nil {
@@ -32,4 +34,12 @@ func performUpdate() {
 		println("Update found, downloading...")
 	}
 	install(latestRelease)
+}
+
+func checkPrivilege() {
+	currentUser, err := user.Current()
+	utils.HandleErr(err)
+	if currentUser.Uid != "0" {
+		utils.HandleErr(errors.New("updates must be run as root"))
+	}
 }

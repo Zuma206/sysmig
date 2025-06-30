@@ -1,10 +1,13 @@
 package main
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 	"github.com/zuma206/sysmig/misc"
 	"github.com/zuma206/sysmig/resolve"
 	"github.com/zuma206/sysmig/updates"
+	"github.com/zuma206/sysmig/utils"
 )
 
 var command = cobra.Command{
@@ -21,5 +24,12 @@ func init() {
 }
 
 func main() {
-	command.Execute()
+	executable, err := os.Executable()
+	utils.HandleErr(err)
+	updateExecutablePath := updates.GetExecutablePath()
+	if executable == updateExecutablePath {
+		updates.ContinueInstall(executable)
+	} else {
+		command.Execute()
+	}
 }
