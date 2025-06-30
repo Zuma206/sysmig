@@ -33,7 +33,9 @@ func performUpdate() {
 	} else {
 		println("Update found, downloading...")
 	}
-	install(latestRelease)
+	executablePath := GetExecutablePath()
+	install(latestRelease, executablePath)
+	run(executablePath)
 }
 
 func checkPrivilege() {

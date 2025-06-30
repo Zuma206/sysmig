@@ -11,9 +11,8 @@ import (
 	"github.com/zuma206/sysmig/utils"
 )
 
-func install(release *GithubRelease) {
+func install(release *GithubRelease, executablePath string) {
 	binaryData := release.GetAsset(binaryAssetName).Download()
-	executablePath := GetExecutablePath()
 	utils.HandleErr(os.MkdirAll(path.Dir(executablePath), utils.READWRITE_PERMS))
 	utils.HandleErr(os.WriteFile(executablePath, *binaryData, utils.EXECUTABLE_PERMS))
 	println("Download complete")
