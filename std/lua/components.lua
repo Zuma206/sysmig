@@ -6,7 +6,16 @@ local function get_key(component)
 end
 
 return function(components)
-  return sequence("std.components", components, {
+  local required_components = map(components, function(component)
+    if type(component) == "string" then
+      if type(components.module) == "string" then
+        return require(components.module .. "." .. component)
+      end
+      return require(component)
+    end
+    return component
+  end)
+  return sequence("std.components", required_components, {
     migration = {
       add = function(component)
         return component.mount or ""
@@ -16,7 +25,7 @@ return function(components)
       end
     },
     sync = table.concat(
-      map(components, function(component)
+      map(required_components, function(component)
         return component.sync or ""
       end),
       "\n"
