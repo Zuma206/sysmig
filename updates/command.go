@@ -20,7 +20,7 @@ var Command = cobra.Command{
 const binaryAssetName = "sysmig"
 
 func performUpdate() {
-	checkPrivilege()
+	assertPrivilege()
 	println("Checking for updates...")
 	latestRelease := GetReleases().GetLatestRelease()
 	if latestRelease == nil {
@@ -38,7 +38,7 @@ func performUpdate() {
 	run(executablePath)
 }
 
-func checkPrivilege() {
+func assertPrivilege() {
 	currentUser, err := user.Current()
 	utils.HandleErr(err)
 	if currentUser.Uid != "0" {

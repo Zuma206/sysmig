@@ -47,7 +47,7 @@ func GetExecutablePath() string {
 }
 
 func ContinueInstall(executable string) {
-	checkPrivilege()
+	assertPrivilege()
 	println("Installing...")
 	time.Sleep(1 * time.Second)
 	data, err := os.ReadFile(executable)
