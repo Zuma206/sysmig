@@ -9,6 +9,8 @@ import (
 	"github.com/zuma206/sysmig/utils"
 )
 
+var check bool
+
 var Command = cobra.Command{
 	Use:   "update",
 	Short: "Update sysmig to the latest version",
@@ -17,10 +19,16 @@ var Command = cobra.Command{
 	},
 }
 
+func init() {
+	Command.Flags().BoolVarP(&check, "check", "c", false, "check for updates without downloading or installing")
+}
+
 const binaryAssetName = "sysmig"
 
 func performUpdate() {
-	checkPrivilege()
+	if !check {
+		assertPrivilege()
+	}
 	println("Checking for updates...")
 	latestRelease := GetReleases().GetLatestRelease()
 	if latestRelease == nil {
@@ -30,15 +38,19 @@ func performUpdate() {
 	if latestRelease.TagName == utils.VERSION {
 		println("You're already on the latest release")
 		os.Exit(0)
-	} else {
-		println("Update found, downloading...")
+	} else if check {
+		println("Update found:", latestRelease.TagName)
+		os.Exit(0)
 	}
+	println("Update found, downloading...")
 	executablePath := GetExecutablePath()
 	install(latestRelease, executablePath)
+	println("Download complete")
+	println("Installation will finish in the background, which may take a second")
 	run(executablePath)
 }
 
-func checkPrivilege() {
+func assertPrivilege() {
 	currentUser, err := user.Current()
 	utils.HandleErr(err)
 	if currentUser.Uid != "0" {
