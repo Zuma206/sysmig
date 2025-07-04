@@ -35,6 +35,8 @@ func performUpdate() {
 	}
 	executablePath := GetExecutablePath()
 	install(latestRelease, executablePath)
+	println("Download complete")
+	println("Installation will finish in the background, which may take a second")
 	run(executablePath)
 }
 

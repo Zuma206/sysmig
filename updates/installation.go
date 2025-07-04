@@ -15,8 +15,6 @@ func install(release *GithubRelease, executablePath string) {
 	binaryData := release.GetAsset(binaryAssetName).Download()
 	utils.HandleErr(os.MkdirAll(path.Dir(executablePath), utils.READWRITE_PERMS))
 	utils.HandleErr(os.WriteFile(executablePath, *binaryData, utils.EXECUTABLE_PERMS))
-	println("Download complete")
-	run(executablePath)
 }
 
 func run(executablePath string) {
@@ -48,10 +46,8 @@ func GetExecutablePath() string {
 
 func ContinueInstall(executable string) {
 	assertPrivilege()
-	println("Installing...")
 	time.Sleep(1 * time.Second)
 	data, err := os.ReadFile(executable)
 	utils.HandleErr(err)
 	utils.HandleErr(os.WriteFile(path.Join("/", "usr", "local", "bin", "sysmig"), data, utils.EXECUTABLE_PERMS))
-	println("sysmig was successfully updated")
 }
