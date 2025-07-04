@@ -1,4 +1,3 @@
-local copy = require "@std.copy"
 local Set = {}
 
 local function default_key(value)

@@ -9,7 +9,8 @@ end
 
 -- A migrator multiplexer
 -- Takes a list of migrators, splits the state, and combines the resolution
-return function(migrators)
+return function(config)
+  local migrators = config.migrators or config
   return migrator("std.system", function(current_state)
     local sys_resolution = { migration = "", sync = "", next_state = {} }
     current_state = current_state or get_initial_state(migrators)
