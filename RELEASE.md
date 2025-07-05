@@ -1,0 +1,1 @@
+This is the second preview release of sysmig. It includes a lot of new features, many breaking. The most important inclusion however, is the update system. Creating this release allows the full testing of the update system.
