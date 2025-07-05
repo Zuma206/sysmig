@@ -30,6 +30,7 @@ func OpenStd(state *lua.State, configDir string) {
 		"symlinks",
 		"flatpak",
 		"components",
+		"homebrew",
 	)
 }
 
