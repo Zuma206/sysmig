@@ -14,7 +14,7 @@ The recommended way to install sysmig is via a one-line bash script.
 #### Using curl
 
 ```sh
-sudo curl -L -o /usr/local/bin/sysmig https://github.com/Zuma206/sysmig/releases/download/v0.0.0-fix-action-permissions/sysmig && sudo chmod +x /usr/local/bin/sysmig
+sudo curl -L -o /usr/local/bin/sysmig https://github.com/Zuma206/sysmig/releases/download/v1.1.0/sysmig && sudo chmod +x /usr/local/bin/sysmig
 ```
 
 ### Package Managers
