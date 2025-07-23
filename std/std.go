@@ -31,6 +31,7 @@ func OpenStd(state *lua.State, configDir string) {
 		"flatpak",
 		"components",
 		"homebrew",
+		"directories",
 	)
 }
 
