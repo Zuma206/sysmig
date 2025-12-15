@@ -1,6 +1,7 @@
 package misc
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -16,8 +17,26 @@ var Init = cobra.Command{
 	},
 }
 
-// Creates the state file if it doesn't exist, may panic
+// Initialises the sysmig directory and files inside, may panic
 func runInit() {
+	checkDir()
+	checkStateFile()
+}
+
+// Checks if the sysmig directory exists, else it creates it
+func checkDir() error {
+	path := utils.GetDir()
+	info, err := os.Stat(path)
+	if err == nil && !info.IsDir() {
+		return fmt.Errorf("%q exists but is not a directory", path)
+	} else if err != nil && os.IsNotExist(err) {
+		return os.Mkdir(path, os.ModePerm)
+	}
+	return err
+}
+
+// Checks if the state file exists, and creates it otherwise
+func checkStateFile() {
 	path := utils.GetStatePath()
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
