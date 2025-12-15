@@ -39,3 +39,7 @@ func GetStatePath() string {
 func GetSyncPath() string {
 	return path.Join(GetDir(), "sync.sh")
 }
+
+func GetLastSyncPath() string {
+	return path.Join(GetDir(), "time-last-sync.json")
+}

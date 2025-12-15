@@ -20,6 +20,7 @@ func init() {
 	command.AddCommand(&misc.Version)
 	command.AddCommand(&misc.Clean)
 	command.AddCommand(&misc.Init)
+	command.AddCommand(&misc.Nag)
 	command.AddCommand(&updates.Command)
 }
 

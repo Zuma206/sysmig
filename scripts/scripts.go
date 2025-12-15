@@ -18,7 +18,7 @@ func FmtMigration(script string, nextState []byte, statePath string) []byte {
 	return []byte(fmtScript)
 }
 
-func FmtSync(script string) []byte {
-	fmtScript := fmt.Sprintf(sync, script)
+func FmtSync(script string, lastSyncPath string) []byte {
+	fmtScript := fmt.Sprintf(sync, script, lastSyncPath, "%s")
 	return []byte(fmtScript)
 }
