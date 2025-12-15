@@ -9,6 +9,7 @@ type Flags struct {
 	configPath    string
 	migrationPath string
 	statePath     string
+	lastSyncPath  string
 	syncPath      string
 }
 
@@ -45,5 +46,10 @@ func init() {
 		&flags.syncPath, "sync", "n",
 		utils.GetSyncPath(),
 		"the path to write the output sync script to",
+	)
+	Command.Flags().StringVarP(
+		&flags.lastSyncPath, "last-sync", "l",
+		utils.GetLastSyncPath(),
+		"the path to write the 'last sync' time to",
 	)
 }

@@ -17,7 +17,7 @@ func writeResolution(resolution *Resolution) {
 	))
 	utils.HandleErr(os.WriteFile(
 		flags.syncPath,
-		scripts.FmtSync(resolution.sync),
+		scripts.FmtSync(resolution.sync, flags.lastSyncPath),
 		utils.EXECUTABLE_PERMS,
 	))
 }
