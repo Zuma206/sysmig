@@ -28,7 +28,7 @@ function flatpak.packages(packages)
         return "flatpak remove -y " .. table.concat(packages, " ")
       end
     },
-    sync = "sudo flatpak update"
+    sync = "sudo flatpak update -y"
   })
 end
 
