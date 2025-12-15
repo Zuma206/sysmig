@@ -15,6 +15,13 @@ set -e
 echo Syncing your system state
 %s
 
+#########################
+# Update last sync time #
+#########################
+
+last_sync_path="%s"
+date +%s > $last_sync_path
+
 ################
 # All done! :) #
 ################
