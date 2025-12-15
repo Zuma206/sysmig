@@ -34,7 +34,11 @@ func checkDir() error {
 	if err == nil && !info.IsDir() {
 		return fmt.Errorf("%q exists but is not a directory", path)
 	} else if err != nil && os.IsNotExist(err) {
-		return os.Mkdir(path, os.ModePerm)
+		if err := os.Mkdir(path, os.ModePerm); err != nil {
+			return err
+		}
+		fmt.Printf("Created sysmig directory %q\n", path)
+		return nil
 	}
 	return err
 }
@@ -56,6 +60,6 @@ func createStateFile(path string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Created an initial state file at %s\n", path)
+	fmt.Printf("Created an initial state file at %q\n", path)
 	return nil
 }
